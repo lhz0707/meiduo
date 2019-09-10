@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Hello Ming</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script> -->
+    <!-- <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script> -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+
+        window.onload =function(){
+            new Vue({
+                el:"#app",
+                data:{
+                    name:''
+                },
+                mounted:function(){
+                    // 前端往后端发送请求
+                    axios.get('http://127.0.0.1:8000/user')
+                        .then(response => {
+                            //处理返回成功的结果
+                            alert(response.data)
+                        })
+                        .catch(error => {
+                            // 处理返回错误的结果(error.response)
+                            alert(error.response.data)
+                            this.name=error.response.data
+                        })
+                },
+                methods:{
+                    isShowname:function(){
+                        axios.get('http://127.0.0.1:8000/user')
+                        .then(response => {
+                            //处理返回成功的结果
+                        })
+                        .catch(error => {
+                            // 处理返回错误的结果
+                            console.log(error.response);
+                            this.sending_flag = false;
+                        })
+                    }
+                }
+
+                })
+
+        }
+    </script>
+</head>
+
+<body>
+    <div id = 'app'>
+            <img src="https://www.baidu.com/img/bd_logo1.png" alt="">百度
+             <h1>{{name}}</h1>
+            <button @click='isShowname'>  点击</button>
+
+    </div>
+
+</body>
+</html>
