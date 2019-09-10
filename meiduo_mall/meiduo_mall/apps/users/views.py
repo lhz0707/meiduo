@@ -79,7 +79,7 @@ class UserRegisterView(View):
 
         # 讲获取的数据保存到数据库中
         # 状态保持
-        User.objects.create_user(username=username,mobile=mobile,password=pwd1)
+        user=User.objects.create_user(username=username,mobile=mobile,password=pwd1)
         # 状态保持
         # 注册成功后返回首页
         login(request,user)
@@ -94,7 +94,7 @@ class UserLoginView(View):
     def post(self,request):
 
         # 获取`数据
-        data=request.get('username')
+        data=request.POST
         username=data.get('username')
         password=data.get('pwd')
         remembered=data.get('remembered')
