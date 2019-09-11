@@ -18,5 +18,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'', include('users.urls')),
-    url(r'', include('verifications.urls'))
+    url(r'', include('verifications.urls')),
+    url(r'',include('oauth.urls'))
 ]

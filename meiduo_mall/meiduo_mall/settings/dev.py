@@ -45,7 +45,9 @@ INSTALLED_APPS = [
 
     # 'meiduo_mall.apps.users.apps.UsersConfig'
     'users.apps.UsersConfig',
-    'verifications.apps.VerificationsConfig'
+    'verifications.apps.VerificationsConfig',
+    'oauth.apps.OauthConfig'
+
 ]
 
 MIDDLEWARE = [
@@ -217,3 +219,8 @@ LOGGING = {
 
 # 指定项目的用户模型类
 AUTH_USER_MODEL = 'users.User'
+
+# 实现qq登陆的id
+QQ_CLIENT_ID = '101518219'
+QQ_CLIENT_SECRET = '418d84ebdc7241efb79536886ae95224'
+QQ_REDIRECT_URI = 'http://www.meiduo.site:8000/oauth_callback'
