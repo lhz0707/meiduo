@@ -104,6 +104,9 @@ class UserLoginView(View):
         username=data.get('username')
         password=data.get('pwd')
         remembered=data.get('remembered')
+        next=request.GET.get('next')
+        if next is None:
+            next = '/'
 
         # 数据验证
         # if username is None or password is None or username=='':
@@ -130,12 +133,12 @@ class UserLoginView(View):
         # 判断用户是否选择记住登陆
         if remembered=='on':
             request.session.set_expiry(60*60*7)
-            response=redirect('/')
+            response=redirect(next)
             response.set_cookie('username',username,60*60*24*7)
         else:
 
             request.session.set_expiry(60 * 60 * 2)
-            response = redirect('/')
+            response = redirect(next)
             response.set_cookie('username', username, 60 * 60 * 2)
         return  response
 

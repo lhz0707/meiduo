@@ -1,4 +1,4 @@
-# 自定义验证模型
+# 自定义判断用户登陆的方式
 from django.contrib.auth.backends import ModelBackend
 import re
 from users.models import User
