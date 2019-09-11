@@ -11,3 +11,6 @@ import re
 class AddressView(View):
     def get(self,request):
         return render(request, 'user_center_site.html')
+
+class AreasView(View):
+    pass
