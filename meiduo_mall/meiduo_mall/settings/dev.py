@@ -46,8 +46,8 @@ INSTALLED_APPS = [
     # 'meiduo_mall.apps.users.apps.UsersConfig'
     'users.apps.UsersConfig',
     'verifications.apps.VerificationsConfig',
-    'oauth.apps.OauthConfig'
-    'addresses.apps.AddressesConfig',
+    'oauth.apps.OauthConfig',
+    # 'addresses.apps.AddressesConfig',
     # 'contents.apps.ContentsConfig',
     # 'goods.apps.GoodsConfig'
 
