@@ -1,10 +1,16 @@
 from django.shortcuts import render,redirect
 from django.views import View
+from django.core.mail import send_mail
 from django.contrib.auth import login,authenticate,logout
 from django.http import HttpResponse
 from users.models import User
 from django_redis import get_redis_connection
+from itsdangerous import TimedJSONWebSignatureSerializer as TJS
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from django.utils.decorators import method_decorator
 import re
+import json
 # Create your views here.
 # 注册首页的模型类
 class IndexView(View):
@@ -145,3 +151,10 @@ class UserLogoutView(View):
             response.delete_cookie('username')
 
         return  response
+# 利用装饰其实现判断用户的登陆
+method_decorator(login_required,name='dispatch')
+# 判断用户是否已经登陆了
+class UserInfoView(View):
+    # 用户中心
+    def get(self,request):
+        return render(request,'user_center_info.html')
