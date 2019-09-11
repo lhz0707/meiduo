@@ -1,8 +1,9 @@
 from django.shortcuts import render,redirect
 from django.views import View
+# 发送邮件的方法
 from django.core.mail import send_mail
 from django.contrib.auth import login,authenticate,logout
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from users.models import User
 from django_redis import get_redis_connection
 from itsdangerous import TimedJSONWebSignatureSerializer as TJS
@@ -161,3 +162,37 @@ class UserInfoView(View):
     # 用户中心
     def get(self,request):
         return render(request,'user_center_info.html')
+
+
+# 验证邮箱的有效性
+class UserEmailView(View):
+    def put(self,request):
+
+        # 获取json书库用户的基本信息
+        data=request.body.decode()
+        # 讲json数据转化为字典
+        data_dict=json.loads(data)
+        # 获取邮箱信息数据 标题 邮件信息内容  收件人信息内容 列表【收件人的邮箱】
+        to_emali=data_dict['email']
+        # 验证邮箱的有效性
+        # send_mall
+        # 更新邮箱数据
+        user=request.user
+        tjs=TJS(settings.SECRET_KEY,300)
+        token = tjs.dumps({'username': user.username, 'email':to_emali}).decode()
+        verify_url=settings.EMAIL_VERIFY_URL+'?token=%s'%token
+        subject='梅朵邮箱'
+        html_message='<p>尊敬的用户您好！</p>' \
+                       '<p>感谢您使用美多商城。</p>' \
+                       '<p>您的邮箱为：%s 。请点击此链接激活您的邮箱：</p>' \
+                       '<p><a href="%s">%s<a></p>' % (to_emali, verify_url, verify_url)
+        # 判断用户是否使用正茬方式登陆
+        send_mail(subject, '', settings.EMAIL_FROM, ['18536109028@163.com'], html_message=html_message)
+        if not user.is_authenticated:
+            return JsonResponse({'code':'4101'})
+        user.email=to_emali
+
+        # 保存
+        user.save()
+        # 正确登陆状态的
+        return JsonResponse({'code':'0'})
