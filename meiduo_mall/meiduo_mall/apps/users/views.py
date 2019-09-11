@@ -12,6 +12,8 @@ from django.conf import settings
 from django.utils.decorators import method_decorator
 import re
 import json
+# 配置异步任务
+from celery_tasks.send_email.tasks import send_emails
 # Create your views here.
 # 注册首页的模型类
 class IndexView(View):
@@ -165,6 +167,7 @@ class UserInfoView(View):
 
 
 # 验证邮箱的有效性
+@method_decorator(login_required, name='dispatch')
 class UserEmailView(View):
     def put(self,request):
 
@@ -181,18 +184,46 @@ class UserEmailView(View):
         tjs=TJS(settings.SECRET_KEY,300)
         token = tjs.dumps({'username': user.username, 'email':to_emali}).decode()
         verify_url=settings.EMAIL_VERIFY_URL+'?token=%s'%token
-        subject='梅朵邮箱'
-        html_message='<p>尊敬的用户您好！</p>' \
-                       '<p>感谢您使用美多商城。</p>' \
-                       '<p>您的邮箱为：%s 。请点击此链接激活您的邮箱：</p>' \
-                       '<p><a href="%s">%s<a></p>' % (to_emali, verify_url, verify_url)
-        # 判断用户是否使用正茬方式登陆
-        send_mail(subject, '', settings.EMAIL_FROM, ['18536109028@163.com'], html_message=html_message)
+
+        send_emails(to_emali, verify_url, settings.EMAIL_FROM)
         if not user.is_authenticated:
             return JsonResponse({'code':'4101'})
         user.email=to_emali
-
-        # 保存
         user.save()
         # 正确登陆状态的
         return JsonResponse({'code':'0'})
+
+@method_decorator(login_required, name='dispatch')
+class UserEmailVerifyView(View):
+
+    def get(self,request):
+    #     获取token数据
+        token=request.GET.get('token')
+
+        if token is None:
+            return HttpResponse("缺少token值",status=400)
+
+        # 机密tocken
+        tjs = TJS(settings.SECRET_KEY, 300)
+        try:
+            data=tjs.loads(token)
+        except:
+            return HttpResponse("无效的token值",status=400)
+
+        # 提起username heemail
+        username=data.get('username')
+        email=data.get('email')
+
+        if username is None or email is None:
+            return HttpResponse("token值失效", status=400)
+        try:
+            # 教研username email是否正确
+            user=User.objects.get(username=username,email=email)
+        except:
+            return HttpResponse("错误的数据", status=400)
+
+        # 更新邮箱数据
+        user.email_actice=True
+        user.save()
+
+        return render(request, 'user_center_info.html')

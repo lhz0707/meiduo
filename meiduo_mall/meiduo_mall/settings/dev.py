@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'verifications.apps.VerificationsConfig',
     'oauth.apps.OauthConfig'
+    'addresses.apps.AddressesConfig',
+    # 'contents.apps.ContentsConfig',
+    # 'goods.apps.GoodsConfig'
 
 ]
 
@@ -240,4 +243,4 @@ EMAIL_FROM = '美多商城<18536109028@163.com>' # 发件人抬头
 
 
 # 邮箱验证链接
-EMAIL_VERIFY_URL = 'http://www.meiduo.site:8000/emails/verification/'
+EMAIL_VERIFY_URL = 'http://127.0.0.1:8000/emails/verification/'
