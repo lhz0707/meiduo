@@ -20,5 +20,7 @@ urlpatterns = [
     url(r'', include('users.urls')),
     url(r'', include('verifications.urls')),
     url(r'',include('oauth.urls')),
-    url(r'', include('addresses.urls'))
+    url(r'', include('addresses.urls')),
+    url(r'',include('contents.urls')),
+    url(r'',include('goods.urls'))
 ]
