@@ -47,9 +47,12 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'verifications.apps.VerificationsConfig',
     'oauth.apps.OauthConfig',
-    'addresses.apps.AddressesConfig'
-    # 'contents.apps.ContentsConfig',
-    # 'goods.apps.GoodsConfig'
+    'addresses.apps.AddressesConfig',
+    'goods.apps.GoodsConfig',
+    'contents.apps.ContentsConfig',
+
+    # 跨域錯誤
+    'corsheaders',
 
 ]
 
@@ -64,8 +67,13 @@ MIDDLEWARE = [
     # 中间见形式用户登陆判断
     # 'meiduo_mall.utils.middleware.myview'
 
-
+    # 跨域錯誤的解決
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
+
+# 默認允許所有的訪問
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'meiduo_mall.urls'
 
@@ -223,7 +231,7 @@ LOGGING = {
 
 # 指定项目的用户模型类
 AUTH_USER_MODEL = 'users.User'
-
+AUTHENTICATION_BACKENDS = ['users.utils.UserUtils']
 # 实现qq登陆的id
 QQ_CLIENT_ID = '101518219'
 QQ_CLIENT_SECRET = '418d84ebdc7241efb79536886ae95224'
@@ -243,4 +251,7 @@ EMAIL_FROM = '美多商城<18536109028@163.com>' # 发件人抬头
 
 
 # 邮箱验证链接
-EMAIL_VERIFY_URL = 'http://127.0.0.1:8000/emails/verification/'
+EMAIL_VERIFY_URL = 'http://www.meiduo.site:8000/emails/verification/'
+
+
+

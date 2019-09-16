@@ -1,4 +1,3 @@
-# 地区表的创建
 from django.db import models
 
 # Create your models here.

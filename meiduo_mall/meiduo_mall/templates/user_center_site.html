@@ -70,8 +70,7 @@
                         <input @click="cancel_title(index)" type="reset" name="" value="取 消">
                     </div>
                     <div>
-                        <h3 v-if=" address.title ">[[ address.title ]]</h3>
-{#                        <h3>[[ address.title ]]</h3>#}
+                        <h3>[[ address.title ]]</h3>
                         <a @click="show_edit_title(index)" class="edit_title"></a>
                     </div>
                     <em v-if="address.id===default_address_id">默认地址</em>

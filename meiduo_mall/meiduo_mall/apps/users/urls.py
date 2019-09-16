@@ -17,4 +17,7 @@ urlpatterns = [
     # 验证邮箱
     url(r'^emails/verification/$', views.UserEmailVerifyView.as_view()),
 
+#     修改密碼的操作
+    url(r'password/$',views.ChangePWDView.as_view()),
+
 ]

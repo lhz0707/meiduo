@@ -227,3 +227,34 @@ class UserEmailVerifyView(View):
         user.save()
 
         return render(request, 'user_center_info.html')
+
+
+# 修改密碼的操作
+class ChangePWDView(View):
+    def get(self,request):
+        # 返回修改密碼的頁面
+        return render(request,'user_center_pass.html')
+
+
+    # 實現修改密碼
+    def post(self,request):
+        # 獲取表單數據中的內容
+        data=request.POST
+        old_pwd=data.get('old_pwd')
+        new_pwd=data.get('new_pwd')
+        new_cpwd=data.get('new_cpwd')
+
+        # 校驗密碼
+        user=request.user
+        if not user.check_password(old_pwd):
+            return render(request,'user_center_pass.html',{'errors_pwd':'密碼錯誤'})
+
+        if new_pwd!=new_cpwd:
+            return render(request,'user_center_pass.html',{'errors_pwd':'兩次密碼不一致'})
+
+        # 更新用戶的新密碼
+        user.set_password(new_pwd)
+        user.save()
+
+        # 返回請結果
+        return render(request,'user_center_pass.html',{'errors_pwd':'修改成功'})
