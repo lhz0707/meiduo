@@ -1,13 +1,15 @@
+import json
+
 from django.shortcuts import render
 from django.views import View
 # Django提供的分页类
 from django.core.paginator import Paginator
-from goods.models import GoodsCategory, SKU,SKUSpecification
+from goods.models import  SKU, SKUSpecification, GoodsCategory,GoodsVisitCount
 from django.http import JsonResponse
+from django_redis import get_redis_connection
 
 # Create your views here.
 from contents.utils import get_categories
-
 
 class GoodsListView(View):
 
@@ -104,7 +106,7 @@ class GoodsSearchView(View):
         return render(request, 'search_list.html', data)
 
 # 商品详情
-class GoodsDetailVIew(View):
+class GoodsDetailView(View):
     def get(self,request,pk):
 
         # 商品频道分类数据渲染
@@ -169,3 +171,86 @@ class GoodsDetailVIew(View):
         }
 
         return render(request, 'detail.html', data)
+
+
+#商品分类访问量
+class GoodsVisitView(View):
+    def post(self,request,pk):
+
+        # 判断分类是否存在
+        try:
+            GoodsCategory.objects.get(id=pk)
+        except:
+            return  JsonResponse({'error':'错误'},status=400)
+
+        # 判斷當前匪類是否保存過
+        try:
+            goodvisit=GoodsVisitCount.objects.get(category_id=pk)
+        except:
+            # 講沒有保存過的數據進行保存
+            GoodsVisitCount.objects.create(category_id=pk,count=1)
+            return JsonResponse({'massage':'ok'})
+
+        # 商品瀏覽量技術
+        goodvisit.count+=1
+        goodvisit.save()
+
+        return JsonResponse({'massage':'ok'})
+
+
+class GoodsHistoryView(View):
+    def post(self,request):
+        # 用戶瀏覽歷史數據
+
+        # 獲取前段傳入的sku_id 數據
+        data=request.body.decode()
+        data_dict=json.loads(data)
+
+        # 驗證sku_id所對應的商品是否存在
+        sku_id=data_dict.get('sku_id')
+        try:
+            SKU.objects.get(id=sku_id)
+        except:
+            return JsonResponse({'error':'錯誤'},status=400)
+
+        # 獲取當前鄧麗的用戶
+        user=request.user
+
+        # 鏈接redis
+        client=get_redis_connection('history')
+
+        # 判斷當親書庫——id 是否已經存儲過 觸怒出國則刪除
+        client.lrem('history_%s'%user,0,sku_id)
+
+        # 講互獲取的數據存儲到redis數據哭中
+        client.lpush('history_%s'%user,0,sku_id)
+
+        # 控制截取數量
+        client.ltrim('history_%s'%user,0,5)
+        # 返回結果
+        return JsonResponse({'message':'ok'})
+
+
+
+    def get(self,request):
+        # 獲取當前用戶
+        user=request.user
+        # 鏈接redis
+        client=get_redis_connection('history')
+
+        # 提起商品分類的數據
+        skus_ids=client.lrange('history_%s'%user,0,-1)
+
+        # 根據商品id查詢數據
+        skus=SKU.objects.filter(id__in=skus_ids)
+        sku_list=[]
+        for sku in skus:
+            sku_list.append({
+
+                'id':sku.id,
+                'name':sku.name,
+                'default_image_url':sku.default_image.url,
+                'price':sku.price
+            })
+        #     講產訊到的是你高頻數據進行返回
+        return JsonResponse({'skus':sku_list})

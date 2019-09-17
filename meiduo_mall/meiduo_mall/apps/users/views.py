@@ -14,7 +14,7 @@ import re
 import json
 # 配置异步任务
 from celery_tasks.send_email.tasks import send_emails
-# Create your views here.
+
 # # 注册首页的模型类
 # class IndexView(View):
 #

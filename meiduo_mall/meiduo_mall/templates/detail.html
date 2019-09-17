@@ -141,24 +141,23 @@
                     <label>{{ spec.name }}:</label>
 
                     {% for option in spec.option_list %}
-{#                        开发阶段#}
-{#                        #}
+
+                        {% if option.sku_id == sku.id %}
+                            <a href="/detail/{{ option.sku_id }}/" class="select">{{ option.value }}</a>
+
+                        {% else %}
+                            <a href="/detail/{{ option.sku_id }}/">{{ option.value }}</a>
+                        {% endif %}
+
+
+{#                        上线阶段#}
 {#                        {% if option.sku_id == sku.id %}#}
-{#                            <a href="/detail/{{ option.sku_id }}/" class="select">{{ option.value }}</a>#}
+{#                            <a href="/detail/{{ option.sku_id }}.html" class="select">{{ option.value }}</a>#}
 {#                        {% elif option.sku_id == 0 %}#}
 {#                            <a href="#">{{ option.value }}</a>#}
 {#                        {% else %}#}
-{#                            <a href="/detail/{{ option.sku_id }}/">{{ option.value }}</a>#}
+{#                            <a href="/detail/{{ option.sku_id }}.html">{{ option.value }}</a>#}
 {#                        {% endif %}#}
-
-{#                        上线阶段#}
-                        {% if option.sku_id == sku.id %}
-                            <a href="/detail/{{ option.sku_id }}.html" class="select">{{ option.value }}</a>
-                        {% elif option.sku_id == 0 %}
-                            <a href="#">{{ option.value }}</a>
-                        {% else %}
-                            <a href="/detail/{{ option.sku_id }}.html">{{ option.value }}</a>
-                        {% endif %}
                     {% endfor %}
                 </div>
             {% endfor %}

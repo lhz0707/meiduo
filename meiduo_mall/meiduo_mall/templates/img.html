@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片</title>
+</head>
+<body>
+
+{#<img src="http://10.211.55.30:8888/group1/M00/00/00/CtM3BVni03-ANUDwAAAmv27pX4k9203075" alt="">#}
+
+{% for sku in skus_list %}
+<img src="{{ sku.default_image.url }}">
+{% endfor %}
+</body>
+</html>

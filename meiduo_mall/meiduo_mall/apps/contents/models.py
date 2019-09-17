@@ -1,7 +1,8 @@
-from django.db import models
 
-# Create your models here.
+# Create your models he
 from meiduo_mall.utils.models import BaseModel
+
+from django.db import models
 
 
 class ContentCategory(BaseModel):
@@ -37,6 +38,7 @@ class Content(BaseModel):
         return self.category.name + ': ' + self.title
 
 
-from django.db import models
 
-# Create your models here.
+
+
+
