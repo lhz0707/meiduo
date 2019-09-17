@@ -50,9 +50,9 @@ INSTALLED_APPS = [
     'addresses.apps.AddressesConfig',
     'goods.apps.GoodsConfig',
     'contents.apps.ContentsConfig',
+    # 建立索引
 
-    # 跨域錯誤
-    'corsheaders',
+    'haystack'
 
 ]
 
@@ -256,3 +256,15 @@ EMAIL_VERIFY_URL = 'http://www.meiduo.site:8000/emails/verification/'
 # 指定自定義的文件存儲累
 #
 DEFAULT_FILE_STORAGE = 'meiduo_mall.utils.fasfdfs.fastdfsstorage.FastDFSStorage'
+
+# Haystack
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://192.168.18.36:9200/', # Elasticsearch服务器ip地址，端口号固定为9200
+        'INDEX_NAME': 'meiduo_mall', # Elasticsearch建立的索引库的名称
+    },
+}
+
+# 当添加、修改、删除数据时，自动生成索引
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'

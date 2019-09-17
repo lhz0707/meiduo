@@ -15,4 +15,4 @@ class FastDFSStorage(Storage):
         :return:
         """
 
-        return 'http://192.168.18.84:8888/' + name
+        return 'http://192.168.18.36:8888/' + name
