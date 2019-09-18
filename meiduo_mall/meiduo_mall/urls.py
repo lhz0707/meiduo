@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'',include('goods.urls')),
     url(r'',include('carts.urls')),
     url(r'',include('orders.urls')),
+    url(r'',include('payments.urls')),
     #导入搜索模块
     url(r'^search/', include('haystack.urls')),
 ]
