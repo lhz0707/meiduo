@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'addresses.apps.AddressesConfig',
     'goods.apps.GoodsConfig',
     'contents.apps.ContentsConfig',
+    # 'orders.apps.OrdersConfig'
+    'orders.apps.OrdersConfig',
     # 建立索引
     'haystack'
 
@@ -276,7 +278,7 @@ DEFAULT_FILE_STORAGE = 'meiduo_mall.utils.fasfdfs.fastdfsstorage.FastDFSStorage'
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': 'http://192.168.18.36:9200/', # Elasticsearch服务器ip地址，端口号固定为9200
+        'URL': 'http://192.168.0.104:9200/', # Elasticsearch服务器ip地址，端口号固定为9200
         'INDEX_NAME': 'meiduo_mall', # Elasticsearch建立的索引库的名称
     },
 }
