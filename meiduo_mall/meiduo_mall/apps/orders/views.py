@@ -212,3 +212,58 @@ class OrderInfoView(View):
             'total_page':page.num_pages,
         }
         return render(request,'user_center_order.html',data)
+
+class OrderCommentView(View):
+    # 获取订单评价页面
+    def get(self,request):
+        order_id=request.GET.get('order_id=order_id')
+
+        # 根据订单查询商品信息
+        try:
+            order=OrderInfo.objects.get(order_id=order_id)
+        except:
+            return render(request,{'404.html'})
+        goods_order=order.skus.filter(is_commented=False)
+
+        # 渲染构建数据内容
+        skus=[]
+        for good in goods_order:
+            skus.append({
+                'name': good.sku.name,
+                'price': str(good.price),
+                'count': good.count,
+                'comment': good.comment,
+                'score': good.score,
+                'is_anonymous': str(good.is_anonymous),
+                'is_commented': str(good.is_commented),
+                'default_image_url': good.sku.default_image.url,
+                'order_id': order_id,
+                'sku_id': good.sku.id
+            })
+        data={'skus':skus}
+
+        return render(request,'goods_judge.html',data)
+
+    def post(self,request):
+        # 保存订单数据
+        # 获取数据
+        data=request.body.decode()
+        data_dict=json.loads(data)
+        # 验证数据
+        sku_id=data_dict.get('sku_id')
+        order_id=data_dict.get('order_id')
+        comment=data_dict.get('comment')
+        score=data_dict.get('score')
+        is_anonymous=data_dict.get('is_anonymous')
+        try:
+            sku=SKU.objects.get(id=sku_id)
+        except:
+            return JsonResponse({'error': '商品不存在'}, status=400)
+        try:
+            OrderInfo.objects.get(order_id=order_id)
+        except:
+            return JsonResponse({'error': '订单不存在'}, status=400)
+        # 3、保存评价信息
+        OrderGoods.objects.filter(order=order_id, sku=sku).update(comment=comment, score=score,
+                                                                      is_anonymous=is_anonymous, is_commented=True)
+        return  JsonResponse({'code':0})

@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'^orders/success/$', views.OrderSuccessView.as_view()),
     # 用户中心获取当前用户的订单信息
     url(r'^orders/info/(?P<pk>\d+)/$', views.OrderInfoView.as_view()),
-
+    # 订单评价
+    url(r'^orders/comment/$', views.OrderCommentView.as_view()),
 ]
