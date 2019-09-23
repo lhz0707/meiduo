@@ -26,6 +26,9 @@ urlpatterns = [
     url(r'',include('carts.urls')),
     url(r'',include('orders.urls')),
     url(r'',include('payments.urls')),
-    #导入搜索模块
+    # 没多后台
+    url(r'meiduo_admin/',include('meiduo_admin.urls')),
+        #导入搜索模块
     url(r'^search/', include('haystack.urls')),
+
 ]

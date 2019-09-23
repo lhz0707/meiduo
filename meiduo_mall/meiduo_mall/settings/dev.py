@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os,sys
+import datetime
 
 # 追加项目的导包路径
 
@@ -53,12 +54,18 @@ INSTALLED_APPS = [
     # 'orders.apps.OrdersConfig'
     'orders.apps.OrdersConfig',
     'payments.apps.PaymentsConfig',
-    # 建立索引
-    'haystack'
+
+    # ES搜索
+    'haystack',
+    # 'django_crontab',  # 定时任务
+    'corsheaders',  # CORS
+    # 'django_crontab'
+
 
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,8 +76,7 @@ MIDDLEWARE = [
     # 中间见形式用户登陆判断
     # 'meiduo_mall.utils.middleware.myview'
 
-    # 跨域錯誤的解決
-    # 'corsheaders.middleware.CorsMiddleware',
+
     # 'django.middleware.common.CommonMiddleware',
 ]
 
@@ -292,3 +298,27 @@ ALIPAY_APPID = '2016082100308405'
 ALIPAY_DEBUG = True
 ALIPAY_URL = 'https://openapi.alipaydev.com/gateway.do'
 ALIPAY_RETURN_URL = 'http://www.meiduo.site:8000/payment/status/'
+
+CORS_ORIGIN_WHITELIST = (
+    'http://127.0.0.1:8080',
+    'http://localhost:8080',
+    'http://www.meiduo.site:8080',
+    'http://www.meiduo.site:8000'
+)
+CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
+
+# JWT配置
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+# JWT配置
+JWT_AUTH = {
+    # 指定有效期
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    'JWT_RESPONSE_PAYLOAD_HANDLER':'meiduo_admin.utils.jwt_response_payload_handler'
+}
